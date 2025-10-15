@@ -1,0 +1,12 @@
+/*
+Theme Name: HYUNSUNG Simple Theme
+Author: HYUNSUNG
+Description: 간단한 WordPress 테마입니다.
+Version: 1.0
+*/
+
+body {
+  font-family: sans-serif;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
