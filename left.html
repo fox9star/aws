@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>메뉴</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffffff; /* 배경색을 흰색으로 변경 */
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="parent.main.location.href='main.html'">메인</button>
+  <button onclick="parent.main.location.href='self.html'">자기소개</button>
+  <button onclick="parent.main.location.href='timer.html'">타이머</button>
+  <button onclick="parent.main.location.href='game.html'">게임</button>
+</body>
+</html>

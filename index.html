@@ -2,12 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>메인 페이지</title>
+  <title>홈페이지 프레임 구조</title>
 </head>
-<body>
-  <h1>환영합니다!</h1>
-  <p>아래 버튼을 눌러 자기소개 페이지로 이동하세요.</p>
+<frameset rows="100,*" frameborder="0" border="0">
+  <!-- 상단 프레임 (top.html) -->
+  <frame src="top.html" name="top" scrolling="no" noresize frameborder="0">
 
-  <button onclick="location.href='self.html'">자기소개</button>
-</body>
+  <!-- 하단 프레임: 좌측 메뉴와 메인 콘텐츠 -->
+  <frameset cols="200,*" frameborder="0" border="0">
+    <!-- 왼쪽 프레임 (left.html) -->
+    <frame src="left.html" name="left" scrolling="no" frameborder="0">
+    
+    <!-- 메인 프레임 (main.html) -->
+    <frame src="main.html" name="main" scrolling="no" frameborder="0">
+  </frameset>
+</frameset>
 </html>
