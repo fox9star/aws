@@ -7,50 +7,44 @@
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-        body {
-            box-sizing: border-box;
-        }
-        
-        .timer-display {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-        }
-        
-        .pulse-animation {
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .button-hover {
-            transition: all 0.2s ease;
-        }
-        
-        .button-hover:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-    </style>
+    body {
+        box-sizing: border-box;
+    }
+    
+    .timer-display {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+    }
+    
+    .pulse-animation {
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .button-hover {
+        transition: all 0.2s ease;
+    }
+    
+    .button-hover:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
-<<<<<<< HEAD
 
- <!-- ✅ 배경색을 흰색으로 변경 -->
  <body class="h-full bg-white flex items-center justify-center p-4">
 
-=======
- <body class="h-full bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
   <main class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
    <header class="text-center mb-8">
     <h1 id="timer-title" class="text-3xl font-bold text-gray-800 mb-2">타이머</h1>
    </header>
-<<<<<<< HEAD
-
+    
    <div class="space-y-6">
     <div class="grid grid-cols-3 gap-4">
      <div class="text-center">
@@ -66,18 +60,7 @@
       <input type="number" id="seconds" min="0" max="59" value="0" class="w-full text-center text-lg font-semibold border-2 border-gray-200 rounded-lg py-2 focus:border-blue-500 focus:outline-none">
      </div>
     </div>
-
-=======
-   <div class="space-y-6"><!-- 시간 설정 -->
-    <div class="grid grid-cols-3 gap-4">
-     <div class="text-center"><label class="block text-sm font-medium text-gray-600 mb-2">시간</label> <input type="number" id="hours" min="0" max="23" value="0" class="w-full text-center text-lg font-semibold border-2 border-gray-200 rounded-lg py-2 focus:border-blue-500 focus:outline-none">
-     </div>
-     <div class="text-center"><label class="block text-sm font-medium text-gray-600 mb-2">분</label> <input type="number" id="minutes" min="0" max="59" value="5" class="w-full text-center text-lg font-semibold border-2 border-gray-200 rounded-lg py-2 focus:border-blue-500 focus:outline-none">
-     </div>
-     <div class="text-center"><label class="block text-sm font-medium text-gray-600 mb-2">초</label> <input type="number" id="seconds" min="0" max="59" value="0" class="w-full text-center text-lg font-semibold border-2 border-gray-200 rounded-lg py-2 focus:border-blue-500 focus:outline-none">
-     </div>
-    </div><!-- 타이머 디스플레이 -->
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
+    
     <div class="bg-gray-900 rounded-xl p-6 text-center">
      <div id="timer-display" class="timer-display text-5xl text-green-400 mb-2">
       00:05:00
@@ -85,7 +68,6 @@
      <div id="timer-status" class="text-gray-400 text-sm">
       준비됨
      </div>
-<<<<<<< HEAD
     </div>
     
     <div class="flex gap-3">
@@ -95,233 +77,4 @@
         <button id="reset-btn" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg button-hover"> 
             <span id="reset-text">리셋</span> 
         </button>
-        <a href="main.html" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg button-hover text-center">홈으로</a>
-    </div>
-
-=======
-    </div><!-- 컨트롤 버튼 -->
-    <div class="flex gap-3"><button id="start-pause-btn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg button-hover"> <span id="start-pause-text">시작</span> </button> <button id="reset-btn" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg button-hover"> <span id="reset-text">리셋</span> </button>
-    </div><!-- 진행률 바 -->
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-    <div class="bg-gray-200 rounded-full h-2 overflow-hidden">
-     <div id="progress-bar" class="bg-blue-500 h-full transition-all duration-1000 ease-linear" style="width: 0%"></div>
-    </div>
-   </div>
-  </main>
-<<<<<<< HEAD
-
-=======
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-  <script>
-        let timerInterval = null;
-        let isRunning = false;
-        let totalSeconds = 0;
-        let remainingSeconds = 0;
-        let originalTotalSeconds = 0;
-
-        const defaultConfig = {
-            timer_title: "타이머",
-            start_button_text: "시작",
-            pause_button_text: "일시정지",
-            reset_button_text: "리셋"
-        };
-
-        // DOM 요소들
-        const hoursInput = document.getElementById('hours');
-        const minutesInput = document.getElementById('minutes');
-        const secondsInput = document.getElementById('seconds');
-        const timerDisplay = document.getElementById('timer-display');
-        const timerStatus = document.getElementById('timer-status');
-        const startPauseBtn = document.getElementById('start-pause-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const progressBar = document.getElementById('progress-bar');
-
-        function updateTimerDisplay() {
-            const hours = Math.floor(remainingSeconds / 3600);
-            const minutes = Math.floor((remainingSeconds % 3600) / 60);
-            const seconds = remainingSeconds % 60;
-            
-            timerDisplay.textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function updateProgress() {
-            if (originalTotalSeconds > 0) {
-                const progress = ((originalTotalSeconds - remainingSeconds) / originalTotalSeconds) * 100;
-                progressBar.style.width = `${Math.max(0, Math.min(100, progress))}%`;
-            }
-        }
-
-        function setTimerFromInputs() {
-            if (!isRunning) {
-                const hours = parseInt(hoursInput.value) || 0;
-                const minutes = parseInt(minutesInput.value) || 0;
-                const seconds = parseInt(secondsInput.value) || 0;
-                
-                totalSeconds = hours * 3600 + minutes * 60 + seconds;
-                remainingSeconds = totalSeconds;
-                originalTotalSeconds = totalSeconds;
-                
-                updateTimerDisplay();
-                updateProgress();
-            }
-        }
-
-        function startTimer() {
-            if (remainingSeconds <= 0) {
-                setTimerFromInputs();
-                if (remainingSeconds <= 0) return;
-            }
-            
-            isRunning = true;
-            timerStatus.textContent = "실행 중";
-            timerDisplay.classList.add('pulse-animation');
-            startPauseBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-            startPauseBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
-            
-            // 입력 필드 비활성화
-            hoursInput.disabled = true;
-            minutesInput.disabled = true;
-            secondsInput.disabled = true;
-            
-            timerInterval = setInterval(() => {
-                remainingSeconds--;
-                updateTimerDisplay();
-                updateProgress();
-                
-                if (remainingSeconds <= 0) {
-                    clearInterval(timerInterval);
-                    isRunning = false;
-                    timerStatus.textContent = "완료!";
-                    timerDisplay.classList.remove('pulse-animation');
-                    timerDisplay.classList.add('text-red-400');
-                    
-<<<<<<< HEAD
-                    // 완료 시 배경 깜빡임 효과
-=======
-                    // 완료 알림 (시각적)
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-                    document.body.style.backgroundColor = '#fee2e2';
-                    setTimeout(() => {
-                        document.body.style.backgroundColor = '';
-                    }, 2000);
-                    
-                    resetControls();
-                }
-            }, 1000);
-        }
-
-        function pauseTimer() {
-            clearInterval(timerInterval);
-            isRunning = false;
-            timerStatus.textContent = "일시정지됨";
-            timerDisplay.classList.remove('pulse-animation');
-            resetControls();
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            isRunning = false;
-            remainingSeconds = 0;
-            originalTotalSeconds = 0;
-            
-            timerStatus.textContent = "준비됨";
-            timerDisplay.classList.remove('pulse-animation', 'text-red-400');
-            timerDisplay.classList.add('text-green-400');
-            
-            // 입력 필드 활성화
-            hoursInput.disabled = false;
-            minutesInput.disabled = false;
-            secondsInput.disabled = false;
-            
-            setTimerFromInputs();
-            resetControls();
-        }
-
-        function resetControls() {
-            startPauseBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
-            startPauseBtn.classList.add('bg-green-500', 'hover:bg-green-600');
-        }
-
-        // 이벤트 리스너
-        startPauseBtn.addEventListener('click', () => {
-            if (isRunning) {
-                pauseTimer();
-            } else {
-                startTimer();
-            }
-        });
-
-        resetBtn.addEventListener('click', resetTimer);
-
-<<<<<<< HEAD
-=======
-        // 입력 필드 변경 시 타이머 업데이트
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-        [hoursInput, minutesInput, secondsInput].forEach(input => {
-            input.addEventListener('input', setTimerFromInputs);
-        });
-
-<<<<<<< HEAD
-        // SDK 설정
-=======
-        // Element SDK 설정
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-        async function render(config) {
-            const timerTitle = document.getElementById('timer-title');
-            const startPauseText = document.getElementById('start-pause-text');
-            const resetText = document.getElementById('reset-text');
-            
-            timerTitle.textContent = config.timer_title || defaultConfig.timer_title;
-            
-            if (isRunning) {
-                startPauseText.textContent = config.pause_button_text || defaultConfig.pause_button_text;
-            } else {
-                startPauseText.textContent = config.start_button_text || defaultConfig.start_button_text;
-            }
-            
-            resetText.textContent = config.reset_button_text || defaultConfig.reset_button_text;
-        }
-
-        function mapToCapabilities(config) {
-            return {
-                recolorables: [],
-                borderables: [],
-                fontEditable: undefined,
-                fontSizeable: undefined
-            };
-        }
-
-        function mapToEditPanelValues(config) {
-            return new Map([
-                ["timer_title", config.timer_title || defaultConfig.timer_title],
-                ["start_button_text", config.start_button_text || defaultConfig.start_button_text],
-                ["pause_button_text", config.pause_button_text || defaultConfig.pause_button_text],
-                ["reset_button_text", config.reset_button_text || defaultConfig.reset_button_text]
-            ]);
-        }
-
-<<<<<<< HEAD
-=======
-        // SDK 초기화
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-        if (window.elementSdk) {
-            window.elementSdk.init({
-                defaultConfig,
-                render,
-                mapToCapabilities,
-                mapToEditPanelValues
-            });
-        }
-
-<<<<<<< HEAD
-        setTimerFromInputs();
-    </script>
- </body>
-=======
-        // 초기 설정
-        setTimerFromInputs();
-    </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'990e356b260ce9fc',t:'MTc2MDg1NTIzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
->>>>>>> 08c28dfcc55cdd5ed8965a5f1baecd89df422354
-</html>
+        <a href="main.html" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3
