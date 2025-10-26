@@ -1,0 +1,37 @@
+<section>
+  <h2>📖 방명록</h2>
+  <form id="guestbook-form">
+    <label for="name">이름:</label><br />
+    <input type="text" id="name" name="name" required /><br /><br />
+
+    <label for="message">메시지:</label><br />
+    <textarea id="message" name="message" rows="4" required></textarea><br /><br />
+
+    <button type="submit">남기기</button>
+  </form>
+
+  <div id="guestbook-entries">
+    <h3>💬 남겨진 메시지</h3>
+    <ul id="entries-list"></ul>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('guestbook-form');
+  const entriesList = document.getElementById('entries-list');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if (name && message) {
+      const entry = document.createElement('li');
+      entry.innerHTML = `<strong>${name}</strong>: ${message}`;
+      entriesList.prepend(entry);
+
+      form.reset();
+    }
+  });
+</script>
