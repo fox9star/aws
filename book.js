@@ -7,54 +7,39 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bookdb';
 
-// DB 연결
-mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('✅ MongoDB 연결 성공'))
-  .catch((err) => {
-    console.error('❌ MongoDB 연결 실패:', err.message);
-    process.exit(1);
-  });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB 연결 성공"))
+  .catch(err => console.error("❌ MongoDB 연결 실패:", err));
 
-app.use(cors()); // GitHub Pages의 검색 데모가 로컬/클라우드 API에 접근 가능하도록
+app.use(cors()); // GitHub Pages에서 API 호출 가능하도록
 app.use(bodyParser.json());
 
-// Book 모델
-const bookSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true, trim: true },
-    author: { type: String, required: true, trim: true },
-    isbn: { type: String, trim: true },
-    year: { type: Number }
-  },
-  { timestamps: true }
-);
+// Book 모델 정의
+const bookSchema = new mongoose.Schema({
+  title: String,
+  author: String,
+  isbn: String,
+  year: Number
+}, { timestamps: true });
 
 const Book = mongoose.model('Book', bookSchema);
 
 // 헬스 체크
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
-});
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-// 도서 전체 조회 + 필터(검색)
+// 도서 조회 + 검색
 app.get('/books', async (req, res) => {
   const { q, title, author, isbn } = req.query;
+  let filter = {};
 
-  // q가 있으면 title/author/isbn 전체에서 부분 일치 검색
   if (q) {
     const regex = new RegExp(q, 'i');
-    const books = await Book.find({
-      $or: [{ title: regex }, { author: regex }, { isbn: regex }]
-    }).sort({ createdAt: -1 });
-    return res.json(books);
+    filter = { $or: [{ title: regex }, { author: regex }, { isbn: regex }] };
+  } else {
+    if (title) filter.title = new RegExp(title, 'i');
+    if (author) filter.author = new RegExp(author, 'i');
+    if (isbn) filter.isbn = new RegExp(isbn, 'i');
   }
-
-  // 개별 필드 검색
-  const filter = {};
-  if (title) filter.title = new RegExp(title, 'i');
-  if (author) filter.author = new RegExp(author, 'i');
-  if (isbn) filter.isbn = new RegExp(isbn, 'i');
 
   const books = await Book.find(filter).sort({ createdAt: -1 });
   res.json(books);
@@ -73,58 +58,24 @@ app.get('/books/:id', async (req, res) => {
 
 // 도서 추가
 app.post('/books', async (req, res) => {
-  try {
-    const { title, author, isbn, year } = req.body;
-    if (!title || !author) return res.status(400).json({ message: 'title과 author는 필수입니다.' });
-    const newBook = await Book.create({ title, author, isbn, year });
-    res.status(201).json(newBook);
-  } catch (err) {
-    res.status(500).json({ message: '도서 생성 중 오류', error: err.message });
-  }
+  const newBook = new Book(req.body);
+  await newBook.save();
+  res.status(201).json(newBook);
 });
 
-// 도서 수정(전체)
+// 도서 수정
 app.put('/books/:id', async (req, res) => {
-  try {
-    const { title, author, isbn, year } = req.body;
-    const book = await Book.findByIdAndUpdate(
-      req.params.id,
-      { title, author, isbn, year },
-      { new: true, runValidators: true }
-    );
-    if (!book) return res.status(404).json({ message: '도서를 찾을 수 없습니다.' });
-    res.json(book);
-  } catch {
-    res.status(400).json({ message: '잘못된 요청입니다.' });
-  }
-});
-
-// 도서 일부 수정
-app.patch('/books/:id', async (req, res) => {
-  try {
-    const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
-    if (!book) return res.status(404).json({ message: '도서를 찾을 수 없습니다.' });
-    res.json(book);
-  } catch {
-    res.status(400).json({ message: '잘못된 요청입니다.' });
-  }
+  const book = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(book);
 });
 
 // 도서 삭제
 app.delete('/books/:id', async (req, res) => {
-  try {
-    const deleted = await Book.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: '도서를 찾을 수 없습니다.' });
-    res.status(204).send();
-  } catch {
-    res.status(400).json({ message: '잘못된 요청입니다.' });
-  }
+  await Book.findByIdAndDelete(req.params.id);
+  res.status(204).send();
 });
 
-// (옵션) 개발용 샘플 데이터 시드
+// 샘플 데이터 시드
 app.post('/seed', async (_req, res) => {
   await Book.deleteMany({});
   await Book.insertMany([
@@ -136,6 +87,5 @@ app.post('/seed', async (_req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`📘 Book API 서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
-  console.log(`MongoDB: ${MONGODB_URI}`);
+  console.log(`📘 Book API 서버 실행: http://localhost:${PORT}`);
 });

@@ -4,74 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>📚 Book Management API · 검색 데모</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root { --bg:#f7f9fc; --text:#2c3e50; --muted:#6c7a89; --primary:#4a6cf7; --card:#fff; --code:#f0f2f5; }
-    * { box-sizing: border-box; }
     body { margin:0; background:var(--bg); color:var(--text); font-family:'Noto Sans KR', Arial, sans-serif; }
-    header { background:var(--card); border-bottom:1px solid #eaecee; padding:20px; position:sticky; top:0; z-index:10; }
-    main { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+    header { background:var(--card); border-bottom:1px solid #eaecee; padding:20px; position:sticky; top:0; }
+    main { max-width:960px; margin:24px auto; padding:0 16px; }
     .card { background:var(--card); border:1px solid #eaecee; border-radius:12px; padding:20px; margin-bottom:20px; }
     h1 { margin:0; font-size:22px; }
     h2 { margin-top:0; font-size:20px; }
     .row { display:grid; grid-template-columns:1fr auto; gap:12px; }
-    input, select { padding:10px; border:1px solid #dfe4ea; border-radius:8px; width:100%; }
+    input { padding:10px; border:1px solid #dfe4ea; border-radius:8px; width:100%; }
     button { background:var(--primary); color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
-    button:disabled { opacity:0.6; cursor:not-allowed; }
     table { width:100%; border-collapse:collapse; margin-top:12px; }
     th, td { border-bottom:1px solid #eceff3; padding:10px; text-align:left; }
     .note { color:var(--muted); font-size:14px; }
-    pre { background:var(--code); padding:12px; border-radius:8px; overflow-x:auto; }
-    .small { font-size: 13px; }
+    #results, #fieldResults { max-height:300px; overflow-y:auto; margin-top:12px; }
   </style>
 </head>
 <body>
   <header>
     <h1>📚 Book Management API · 검색 데모</h1>
-    <p class="small">GitHub Pages는 정적 문서를 제공하며, 아래 검색은 외부 실행 중인 API 서버에 요청합니다.</p>
+    <p class="note">GitHub Pages는 정적 문서를 제공하며, 검색은 외부 실행 중인 API 서버에 요청합니다.</p>
   </header>
 
   <main>
     <section class="card">
       <h2>API 서버 주소 설정</h2>
-      <p class="note">예: <code>http://localhost:3000</code> 또는 클라우드에 배포한 주소</p>
-      <div class="row">
-        <input id="baseUrl" placeholder="API Base URL (예: http://localhost:3000)" />
-        <button id="saveUrl">저장</button>
-      </div>
-      <p class="small">저장은 로컬 스토리지에 기록됩니다.</p>
+      <input id="baseUrl" placeholder="API Base URL (예: http://localhost:3000)" />
+      <button id="saveUrl">저장</button>
     </section>
 
     <section class="card">
       <h2>빠른 검색</h2>
-      <div class="row">
-        <input id="query" placeholder="키워드 (제목/저자/ISBN)" />
-        <button id="searchBtn">검색</button>
-      </div>
+      <input id="query" placeholder="키워드 (제목/저자/ISBN)" />
+      <button id="searchBtn">검색</button>
       <div id="results"></div>
     </section>
 
     <section class="card">
       <h2>필드별 검색</h2>
-      <div class="row" style="grid-template-columns: 1fr 1fr 1fr auto;">
-        <input id="title" placeholder="제목" />
-        <input id="author" placeholder="저자" />
-        <input id="isbn" placeholder="ISBN" />
-        <button id="fieldSearchBtn">검색</button>
-      </div>
+      <input id="title" placeholder="제목" />
+      <input id="author" placeholder="저자" />
+      <input id="isbn" placeholder="ISBN" />
+      <button id="fieldSearchBtn">검색</button>
       <div id="fieldResults"></div>
-    </section>
-
-    <section class="card">
-      <h2>사용법</h2>
-      <ul>
-        <li><strong>빠른 검색:</strong> <code>GET /books?q=키워드</code></li>
-        <li><strong>필드별 검색:</strong> <code>GET /books?title=...&author=...&isbn=...</code></li>
-      </ul>
-      <pre><code>curl "http://localhost:3000/books?q=node"
-curl "http://localhost:3000/books?title=deep&author=박"</code></pre>
-      <p class="note">CORS가 활성화되어 있어 GitHub Pages에서 API 서버로 요청할 수 있습니다.</p>
     </section>
   </main>
 
@@ -81,16 +57,13 @@ curl "http://localhost:3000/books?title=deep&author=박"</code></pre>
     const queryInput = document.getElementById('query');
     const searchBtn = document.getElementById('searchBtn');
     const resultsDiv = document.getElementById('results');
-
     const titleInput = document.getElementById('title');
     const authorInput = document.getElementById('author');
     const isbnInput = document.getElementById('isbn');
     const fieldSearchBtn = document.getElementById('fieldSearchBtn');
     const fieldResultsDiv = document.getElementById('fieldResults');
 
-    // Load saved base URL
     baseUrlInput.value = localStorage.getItem('bookapi_baseurl') || '';
-
     saveUrlBtn.onclick = () => {
       localStorage.setItem('bookapi_baseurl', baseUrlInput.value.trim());
       alert('API 주소가 저장되었습니다.');
@@ -108,53 +81,4 @@ curl "http://localhost:3000/books?title=deep&author=박"</code></pre>
         return;
       }
       const rows = items.map(b => `
-        <tr>
-          <td>${b.title || ''}</td>
-          <td>${b.author || ''}</td>
-          <td>${b.isbn || ''}</td>
-          <td>${b.year || ''}</td>
-        </tr>
-      `).join('');
-      container.innerHTML = `
-        <table>
-          <thead>
-            <tr><th>제목</th><th>저자</th><th>ISBN</th><th>연도</th></tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
-
-    searchBtn.onclick = async () => {
-      const base = (baseUrlInput.value || '').trim();
-      const q = (queryInput.value || '').trim();
-      if (!base) return alert('API Base URL을 입력하세요.');
-      const url = base + '/books' + (q ? ('?q=' + encodeURIComponent(q)) : '');
-      resultsDiv.innerHTML = '<p class="note">검색 중...</p>';
-      try {
-        const data = await fetchJSON(url);
-        renderTable(resultsDiv, data);
-      } catch (e) {
-        resultsDiv.innerHTML = '<p class="note">오류: ' + e.message + '</p>';
-      }
-    };
-
-    fieldSearchBtn.onclick = async () => {
-      const base = (baseUrlInput.value || '').trim();
-      if (!base) return alert('API Base URL을 입력하세요.');
-      const params = new URLSearchParams();
-      if (titleInput.value) params.set('title', titleInput.value);
-      if (authorInput.value) params.set('author', authorInput.value);
-      if (isbnInput.value) params.set('isbn', isbnInput.value);
-      const url = base + '/books' + (params.toString() ? ('?' + params.toString()) : '');
-      fieldResultsDiv.innerHTML = '<p class="note">검색 중...</p>';
-      try {
-        const data = await fetchJSON(url);
-        renderTable(fieldResultsDiv, data);
-      } catch (e) {
-        fieldResultsDiv.innerHTML = '<p class="note">오류: ' + e.message + '</p>';
-      }
-    };
-  </script>
-</body>
-</html>
+        <tr><td>${b.title||''}</td><td>${b.author||''}</td><td>${b.isbn||''}</td><td>${b.year||''}</td></tr>
