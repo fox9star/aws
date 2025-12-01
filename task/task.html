@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Management App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>할 일 관리</h1>
+    <div class="controls">
+      <input id="new-title" type="text" placeholder="할 일을 입력하세요" aria-label="할 일 제목" />
+      <input id="new-due" type="date" aria-label="마감일" />
+      <select id="new-priority" aria-label="우선순위">
+        <option value="medium" selected>보통</option>
+        <option value="high">높음</option>
+        <option value="low">낮음</option>
+      </select>
+      <button id="add-btn" class="primary">추가</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="toolbar">
+      <div class="filters" role="tablist" aria-label="필터">
+        <button class="tab active" data-filter="all" role="tab" aria-selected="true">전체</button>
+        <button class="tab" data-filter="active" role="tab">진행중</button>
+        <button class="tab" data-filter="completed" role="tab">완료</button>
+        <button class="tab" data-filter="today" role="tab">오늘</button>
+      </div>
+      <div class="sort">
+        <label>
+          정렬:
+          <select id="sort-select" aria-label="정렬">
+            <option value="created-desc">최근 추가순</option>
+            <option value="due-asc">마감일 오름차순</option>
+            <option value="priority-desc">우선순위 높음 우선</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="stats">
+      <span id="stats-count">0개</span>
+      <button id="clear-completed" class="ghost">완료 삭제</button>
+      <button id="export-json" class="ghost">내보내기</button>
+      <input id="import-file" type="file" accept="application/json" hidden />
+      <button id="import-json" class="ghost">가져오기</button>
+    </section>
+
+    <section id="list" class="task-list" aria-live="polite"></section>
+  </main>
+
+  <template id="task-item-template">
+    <article class="task-item">
+      <label class="checkbox">
+        <input type="checkbox" class="complete-toggle" aria-label="완료 토글" />
+      </label>
+      <div class="content">
+        <div class="row">
+          <input class="title-input" />
+          <span class="badge priority"></span>
+        </div>
+        <div class="meta">
+          <input type="date" class="due-input" />
+          <textarea class="notes-input" rows="1" placeholder="메모 (선택)"></textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="dup-btn" title="복제">↺</button>
+        <button class="del-btn" title="삭제">✕</button>
+      </div>
+    </article>
+  </template>
+
+  <footer class="app-footer">
+    <small>LocalStorage 저장 · GitHub Pages 호스팅</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
