@@ -1,0 +1,26 @@
+{
+  "name": "book-api",
+  "version": "1.0.0",
+  "description": "Book Management API with search (Node.js, Express, MongoDB). GitHub Pages docs included.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongodb",
+    "mongoose",
+    "api",
+    "books",
+    "search"
+  ],
+  "author": "HYUNSUNG",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^7.6.3"
+  }
+}

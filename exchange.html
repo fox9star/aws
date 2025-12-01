@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>환율 조회</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>환율 조회</h1>
+    <form id="exchange-form">
+      <label>금액: <input type="number" id="amount" value="100" step="any" min="0" /></label>
+      <label>From: <input type="text" id="from" value="USD" /></label>
+      <label>To: <input type="text" id="to" value="KRW" /></label>
+      <button type="submit">변환</button>
+    </form>
+    <section id="result" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const form = document.getElementById("exchange-form");
+    const resultEl = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const amountRaw = document.getElementById("amount").value;
+      const amount = Number(amountRaw);
+      const from = document.getElementById("from").value.trim().toUpperCase();
+      const to = document.getElementById("to").value.trim().toUpperCase();
+
+      if (!from || !to || from.length !== 3 || to.length !== 3) {
+        resultEl.innerHTML = `<span class="error">통화 코드를 정확히 입력하세요 (예: USD, KRW).</span>`;
+        return;
+      }
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+        resultEl.innerHTML = `<span class="error">금액은 0보다 큰 숫자여야 합니다.</span>`;
+        return;
+      }
+
+      resultEl.textContent = "조회 중...";
+
+      try {
+        const url = `https://api.exchangerate.host/convert?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&amount=${encodeURIComponent(amount)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data || data.success === false || data.result == null) {
+          resultEl.innerHTML = `<span class="error">API 오류: 요청이 실패했습니다.<br>통화 코드 또는 금액을 다시 확인해주세요.</span>`;
+          return;
+        }
+
+        const converted = Number(data.result);
+        const rate = data.info?.rate;
+        const date = data.date;
+
+        const formatNumber = (n) =>
+          new Intl.NumberFormat(undefined, { maximumFractionDigits: 6 }).format(n);
+
+        resultEl.innerHTML = `
+          ${formatNumber(amount)} ${from} = ${formatNumber(converted)} ${to}<br>
+          환율(${from}→${to}): ${formatNumber(rate)}<br>
+          <span class="muted">기준일: ${date}</span>
+        `;
+      } catch (err) {
+        resultEl.innerHTML = `<span class="error">네트워크 오류: ${err?.message || "요청 중 문제가 발생했습니다."}</span>`;
+      }
+    });
+  </script>
+</body>
+</html>

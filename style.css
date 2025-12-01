@@ -4,9 +4,24 @@ Author: HYUNSUNG
 Description: 간단한 WordPress 테마입니다.
 Version: 1.0
 */
-
 body {
-  font-family: sans-serif;
-  background-color: #f0f0f0;
+  font-family: system-ui, sans-serif;
+  margin: 0;
   padding: 20px;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+input, button {
+  padding: 8px;
+}
+#result {
+  margin-top: 20px;
+  font-weight: bold;
 }
